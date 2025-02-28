@@ -34,13 +34,15 @@
         state: present
 
     - name: Start PostgreSQL Service
-      ansible.builtin.systemd:
+      service:
         name: postgresql
         state: started
         enabled: yes
+        use: sysvinit
 
     - name: Start Odoo Service
-      ansible.builtin.systemd:
+      service:
         name: odoo
         state: started
         enabled: yes
+        use: sysvinit
