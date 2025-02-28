@@ -1,0 +1,43 @@
+- name: Install PostgreSQL and Odoo on Remote Server
+  hosts: remote_server
+  become: true
+  tasks:
+    - name: Install PostgreSQL
+      apt:
+        name: postgresql
+        state: present
+        update_cache: yes
+
+    - name: Download Odoo GPG Key
+      ansible.builtin.get_url:
+        url: https://nightly.odoo.com/odoo.key
+        dest: /usr/share/keyrings/odoo-archive-keyring.gpg
+        mode: '0644'
+
+    - name: Add Odoo Repository with Proper Keyring
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/odoo.list
+        content: |
+          deb [signed-by=/usr/share/keyrings/odoo-archive-keyring.gpg] https://nightly.odoo.com/18.0/nightly/deb/ ./
+        mode: '0644'
+
+    - name: Update APT Cache
+      apt:
+        update_cache: yes
+
+    - name: Install Odoo
+      apt:
+        name: odoo
+        state: present
+
+    - name: Start PostgreSQL Service
+      ansible.builtin.systemd:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Start Odoo Service
+      ansible.builtin.systemd:
+        name: odoo
+        state: started
+        enabled: yes
