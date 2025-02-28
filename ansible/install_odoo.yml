@@ -8,11 +8,14 @@
         state: present
         update_cache: yes
 
+    - name: Install gpg
+      apt:
+        name: gpt
+        state: present
+
     - name: Download Odoo GPG Key
-      ansible.builtin.get_url:
-        url: https://nightly.odoo.com/odoo.key
-        dest: /usr/share/keyrings/odoo-archive-keyring.gpg
-        mode: '0644'
+      shell: |
+        wget -qO- https://nightly.odoo.com/odoo.key | gpg --dearmor | tee /usr/share/keyrings/odoo-archive-keyring.gpg > /dev/null
 
     - name: Add Odoo Repository with Proper Keyring
       ansible.builtin.copy:
