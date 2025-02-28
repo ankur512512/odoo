@@ -10,7 +10,7 @@
 
     - name: Install gpg
       apt:
-        name: gpt
+        name: gpg
         state: present
 
     - name: Download Odoo GPG Key
