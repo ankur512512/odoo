@@ -7,6 +7,13 @@
         name: postgresql
         state: present
         update_cache: yes
+        
+    - name: Start PostgreSQL Service
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+        use: sysvinit
 
     - name: Install gpg
       apt:
@@ -24,21 +31,11 @@
           deb [signed-by=/usr/share/keyrings/odoo-archive-keyring.gpg] https://nightly.odoo.com/18.0/nightly/deb/ ./
         mode: '0644'
 
-    - name: Update APT Cache
-      apt:
-        update_cache: yes
-
     - name: Install Odoo
       apt:
         name: odoo
         state: present
-
-    - name: Start PostgreSQL Service
-      service:
-        name: postgresql
-        state: started
-        enabled: yes
-        use: sysvinit
+        update_cache: yes
 
     - name: Start Odoo Service
       service:
